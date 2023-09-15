@@ -3,7 +3,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
-class User(models.Model):
+class UserAdmin(models.Model):
     identification = models.IntegerField()
     name = models.CharField(max_length=255)
     mail = models.EmailField(max_length=255)
