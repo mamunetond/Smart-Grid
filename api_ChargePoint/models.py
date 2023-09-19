@@ -7,6 +7,7 @@ class ChargePoint(models.Model):
     company = models.CharField(max_length=200)
     latitude = models.FloatField()
     longitude = models.FloatField()
+    activate = models.BooleanField()
     created_at_point = models.DateTimeField(auto_now_add=True)
     updated_at_point = models.DateTimeField(auto_now_add=True)
     
