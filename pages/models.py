@@ -35,4 +35,4 @@ class ChargePoint(models.Model):
     updated_at_point = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.tittle
+        return self.name_point
