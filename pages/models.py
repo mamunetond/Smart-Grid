@@ -24,8 +24,12 @@ class Route(models.Model):
     latitude_destination = models.FloatField()
     longitude_origin = models.FloatField()
     longitude_destination = models.FloatField()
+    battery_percentage = models.IntegerField()
     created_at_route = models.DateTimeField(auto_now_add=True)
     updated_at_route = models.DateTimeField(auto_now_add=True)
+    
+    def __srt__(self):
+        return self.tittle
 
 class ChargePoint(models.Model):
     name_point = models.CharField(max_length=200)
