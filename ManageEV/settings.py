@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'api_UserAdmin',
     'api_Route',
     'api_ChargePoint',
+    'api_ElectricVehicle',
     'rest_framework',
     'coreapi',
     'phonenumbers'
