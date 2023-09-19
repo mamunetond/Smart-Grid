@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'api_ElectricVehicle',
     'rest_framework',
     'coreapi',
-    'phonenumbers'
+    
 ]
 
 MIDDLEWARE = [

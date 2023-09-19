@@ -5,8 +5,10 @@ from django.http.response import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
-from .models import ChargePoint
+from .models import ChargePoint, ElectricVehicle
 import json
+from rest_framework import generics
+from .serializers import ElectricVehicleSerializer
 # Create your views here.
 
 class ChargePointView(View):
@@ -55,3 +57,11 @@ class ChargePointView(View):
         return JsonResponse(data)
     def delete(self, request):
         pass
+
+class ElectricVehicleListCreate(generics.ListCreateAPIView):
+    queryset = ElectricVehicle.objects.all()
+    serializer_class = ElectricVehicleSerializer
+
+class ElectricVehicleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ElectricVehicle.objects.all()
+    serializer_class = ElectricVehicleSerializer
