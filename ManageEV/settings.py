@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'pages.apps.PagesConfig',
     'api_UserAdmin',
     'api_Route',
+    'api_ChargePoint',
     'rest_framework',
     'coreapi',
 ]

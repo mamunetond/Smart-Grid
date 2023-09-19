@@ -22,6 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api_UserAdmin/', include('api_UserAdmin.urls')),
     path('api_Route/', include('api_Route.urls')),
+    path('api_ChargePoint/', include('api_ChargePoint.urls')),
     path('docs_UserAdmin/', include_docs_urls(title = 'Api User Admin Documentation')),
     path('docs_Route/', include_docs_urls(title = 'Api Route Documentation')),
+    path('docs_ChargePoint/', include_docs_urls(title = 'Api Charge Point Documentation')),
 ]

@@ -5,7 +5,7 @@ from django.http.response import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
-from .models import *
+from .models import ChargePoint
 import json
 # Create your views here.
 
@@ -35,7 +35,7 @@ class ChargePointView(View):
 
     def post(self, request):
         jasonData = json.loads(request.body)
-        ChargePoint.objects.create(name_point=jasonData['name_point'], latitude=jasonData['latitude'], longitude=jasonData['longitude'])
+        ChargePoint.objects.create(name_point=jasonData['name_point'],company=jasonData['company'], latitude=jasonData['latitude'], longitude=jasonData['longitude'])
         data = {'message':"Success"}
         return JsonResponse(data)
 
@@ -45,6 +45,7 @@ class ChargePointView(View):
         if len(chargePoints)>0:
             point = ChargePoint.objects.get(id=id)
             point.name_point = jasonData['name_point']
+            point.company = jasonData['company']
             point.latitude = jasonData['latitude']
             point.longitude = jasonData['longitude']
             point.save()

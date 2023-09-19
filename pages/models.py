@@ -29,6 +29,7 @@ class Route(models.Model):
 
 class ChargePoint(models.Model):
     name_point = models.CharField(max_length=200)
+    company = models.CharField(max_length=200)
     latitude = models.FloatField()
     longitude = models.FloatField()
     created_at_point = models.DateTimeField(auto_now_add=True)
