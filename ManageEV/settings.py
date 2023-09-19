@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'api_ChargePoint',
     'rest_framework',
     'coreapi',
+    'phonenumbers'
 ]
 
 MIDDLEWARE = [

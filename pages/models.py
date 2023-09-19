@@ -45,6 +45,7 @@ class ChargePoint(models.Model):
 
 
 class ElectricVehicle(models.Model):
+    vehicle_id= models.AutoField(primary_key=True) 
     make = models.CharField(max_length=100) #The make of vehicle example tesla.
     model = models.CharField(max_length=100)# The model or reference of vehicle.
     year = models.PositiveIntegerField() # The year of manufacture of the vehicle.
