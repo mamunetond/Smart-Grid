@@ -3,6 +3,6 @@ from .serializer import ElectricVehicleSerializer
 from .models import ElectricVehicle
 
 
-class ChargePointViewSet(viewsets.ModelViewSet):
+class ElectricVehicleViewSet(viewsets.ModelViewSet):
    queryset = ElectricVehicle.objects.all()
    serializer_class = ElectricVehicleSerializer
