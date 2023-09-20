@@ -10,23 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from os import getenv
 from pathlib import Path
 from datetime import timedelta
+from django.core.management.utils import get_random_secret_key
+import dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_file = BASE_DIR / ".env.local"
+
+if dotenv_file.is_file():
+  dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b@x3@*l3%#*$uwqwh!$ff3)!nofqss8)#)#&!48c&4&&0d2w*u'
+SECRET_KEY = getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = getenv("DJANGO_DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 
 # Application definition
@@ -38,14 +45,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'pages.apps.PagesConfig',
-    'api_UserAdmin',
-    'api_Route',
-    'api_ChargePoint',
-    'api_ElectricVehicle',
+    "users",
     'rest_framework',
-    'coreapi',
-    'corsheaders',
+    "djoser",
 ]
 
 MIDDLEWARE = [
@@ -90,6 +92,17 @@ DATABASES = {
     }
 }
 
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django_ses.SESBackend'
+# DEFAULT_FROM_EMAIL = getenv('AWS_SES_FROM_EMAIL')
+
+# AWS_SES_ACCESS_KEY_ID = getenv('AWS_SES_ACCESS_KEY_ID')
+# AWS_SES_SECRET_ACCESS_KEY = getenv('AWS_SES_SECRET_ACCESS_KEY')
+# AWS_SES_REGION_NAME = getenv('AWS_SES_REGION_NAME')
+# AWS_SES_REGION_ENDPOINT = 'email.{AWS_SES_REGION_NAME}.amazonaws.com'
+# AWS_SES_FROM_EMAIL = getenv('AWS_SES_FROM_EMAIL')
+# USE_SES_V2 = True
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -126,6 +139,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -133,14 +149,24 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-  'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+  # 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
   'DEFAULT_PERMISSION_CLASSES': [
-    'rest_framework.permissions.AllowAny',
+    'rest_framework.permissions.IsAuthenticated',
   ],
   'DEFAULT_AUTHENTICATION_CLASSES': [
-    'rest_framework.authentication.JWTAuthentication',
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
   ],
 }
+
+DJOSER = {
+  'PASSWORD_RESET_CONFIRM_URL': 'password-reset/{uid}/{token}',
+  'SEND_ACTIVATION_EMAIL': True,
+  'ACTIVATION_URL': 'activation/{uid}/{token}',
+  'USER_CREATE_PASSWORD_RETYPE': True,
+  'PASSWORD_RESET_CONFIRM_RETYPE': True,
+  'TOKEN_MODEL': None,
+}
+
 
 SIMPLE_JWT = {
   'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -154,3 +180,4 @@ CORS_ALLOWED_ORIGINS = [
   "http://localhost:3000",
 ]
 
+AUTH_USER_MODEL = "users.MyUser"
