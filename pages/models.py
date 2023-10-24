@@ -28,6 +28,7 @@ class ChargePoint(models.Model):
     longitude = models.FloatField()
     activate = models.BooleanField()
     private = models.BooleanField()
+    address = models.CharField(max_length=200)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     created_at_point = models.DateTimeField(auto_now_add=True)
     updated_at_point = models.DateTimeField(auto_now_add=True)
