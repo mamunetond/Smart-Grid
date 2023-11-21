@@ -1,3 +1,4 @@
+# model_predictivo.py
 import os
 import json
 from dotenv import load_dotenv
@@ -54,14 +55,19 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
 
         mensaje_ruta = "Con el porcentaje de batería actual, puedes llegar al destino." if porcentaje_bateria_necesario <= porcentaje_bateria_actual else f"Necesitas cargar aproximadamente {porcentaje_recargar:.2f}% más de batería para usar esta ruta."
 
-        # Verifica si la ruta actual es la óptima
-        if resultados["ruta_optima_index"] is None or porcentaje_bateria_necesario < resultados["rutas"][resultados["ruta_optima_index"]]["porcentaje_bateria_necesario"]:
-            resultados["ruta_optima_index"] = i
-
         # Ajusta la información de la ruta para incluir solo lo necesario
         informacion_ruta = {
             "overview_polyline": ruta_info.get("overview_polyline", {}).get("points", ""),
-            "bounds": ruta_info.get("bounds", {})
+            "bounds": {
+                "northeast": {
+                    "lat": ruta_info.get("bounds", {}).get("northeast", {}).get("lat", ""),
+                    "lng": ruta_info.get("bounds", {}).get("northeast", {}).get("lng", "")
+                },
+                "southwest": {
+                    "lat": ruta_info.get("bounds", {}).get("southwest", {}).get("lat", ""),
+                    "lng": ruta_info.get("bounds", {}).get("southwest", {}).get("lng", "")
+                }
+            }
         }
 
         ruta_actual = {
@@ -81,6 +87,7 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
 
     # Establece la ruta óptima
     if resultados["rutas"]:
+        resultados["ruta_optima_index"] = min(range(len(resultados["rutas"])), key=lambda i: resultados["rutas"][i]["consumo_ajustado"])
         resultados["rutas"][resultados["ruta_optima_index"]]["ruta_optima"] = True
 
     if not resultados["rutas"]:
