@@ -50,7 +50,9 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
 
         porcentaje_bateria_necesario = max(0, (consumo_ajustado / capacidad_bateria_estandar) * 100)
 
-        mensaje_ruta = "Con el porcentaje de batería actual, puedes llegar al destino." if porcentaje_bateria_necesario <= porcentaje_bateria_actual else f"Necesitas cargar aproximadamente {max(0, porcentaje_bateria_necesario - porcentaje_bateria_actual):.2f}% más de batería para usar esta ruta."
+        porcentaje_recargar = max(0, porcentaje_bateria_necesario - porcentaje_bateria_actual)
+
+        mensaje_ruta = "Con el porcentaje de batería actual, puedes llegar al destino." if porcentaje_bateria_necesario <= porcentaje_bateria_actual else f"Necesitas cargar aproximadamente {porcentaje_recargar:.2f}% más de batería para usar esta ruta."
 
         # Verifica si la ruta actual es la óptima
         if resultados["ruta_optima_index"] is None or porcentaje_bateria_necesario < resultados["rutas"][resultados["ruta_optima_index"]]["porcentaje_bateria_necesario"]:
@@ -68,9 +70,11 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
             "duracion": ruta_info['legs'][0]['duration']['text'],
             "consumo_ajustado": consumo_ajustado,
             "porcentaje_bateria_necesario": porcentaje_bateria_necesario,
+            "porcentaje_recargar": porcentaje_recargar,
+            "necesita_recargar": porcentaje_recargar > 0,
             "mensaje": mensaje_ruta,
             "ruta_optima": False,  # Inicialmente establecer como False
-            "informacion_ruta": informacion_ruta  # Incluye la información de la ruta en cada ruta
+            "informacion_ruta": informacion_ruta
         }
 
         resultados["rutas"].append(ruta_actual)
