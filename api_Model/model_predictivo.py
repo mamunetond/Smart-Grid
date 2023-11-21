@@ -8,8 +8,7 @@ load_dotenv()
 
 def obtener_direcciones(api_key, origen, destino):
     gmaps = googlemaps.Client(key=api_key)
-    directions_result = gmaps.directions(origen, destino, mode="driving", avoid="ferries", alternatives=True)
-    return directions_result
+    return gmaps.directions(origen, destino, mode="driving", avoid="ferries", alternatives=True)
 
 def calcular_consumo_ajustado(ruta_info):
     eficiencia_vehiculo = 0.2
@@ -44,45 +43,38 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
 
     capacidad_bateria_estandar = 60  # Capacidad estándar de la batería en kWh
 
-    resultados = {"rutas": []}
+    resultados = {"rutas": [], "ruta_optima": None, "error": None, "mensaje": None}
 
     for i, ruta_info in enumerate(direcciones):
         consumo_ajustado = calcular_consumo_ajustado(ruta_info)
 
         porcentaje_bateria_necesario = max(0, (consumo_ajustado / capacidad_bateria_estandar) * 100)
 
+        mensaje_ruta = "Con el porcentaje de batería actual, puedes llegar al destino." if porcentaje_bateria_necesario <= porcentaje_bateria_actual else f"Necesitas cargar aproximadamente {max(0, porcentaje_bateria_necesario - porcentaje_bateria_actual):.2f}% más de batería para usar esta ruta."
+
         ruta_actual = {
             "numero_ruta": i + 1,
             "distancia": ruta_info['legs'][0]['distance']['text'],
             "duracion": ruta_info['legs'][0]['duration']['text'],
             "consumo_ajustado": consumo_ajustado,
-            "porcentaje_bateria_necesario": porcentaje_bateria_necesario
+            "porcentaje_bateria_necesario": porcentaje_bateria_necesario,
+            "mensaje": mensaje_ruta
         }
-
-        if porcentaje_bateria_necesario <= 0:
-            ruta_actual["mensaje"] = "Con el porcentaje de batería actual, puedes llegar al destino."
-        else:
-            ruta_actual["mensaje"] = "Necesitas cargar más batería para usar esta ruta."
-
-        if porcentaje_bateria_necesario > porcentaje_bateria_actual:
-            diferencia_porcentaje = porcentaje_bateria_necesario - porcentaje_bateria_actual
-            ruta_actual["mensaje_carga"] = f"Necesitas cargar aproximadamente {diferencia_porcentaje:.2f}% más de batería."
 
         resultados["rutas"].append(ruta_actual)
 
     # Encuentra la ruta más eficiente
-    mejor_ruta = min(resultados["rutas"], key=lambda x: x["consumo_ajustado"])
+    if resultados["rutas"]:
+        mejor_ruta = min(resultados["rutas"], key=lambda x: x["consumo_ajustado"])
 
-    if porcentaje_bateria_necesario > porcentaje_bateria_actual:
         resultados["ruta_optima"] = {
             "numero_ruta": mejor_ruta["numero_ruta"],
             "consumo_ajustado": mejor_ruta["consumo_ajustado"],
-            "mensaje_carga": mejor_ruta.get("mensaje_carga", ""),
+            "mensaje_carga": mejor_ruta["mensaje"],
         }
-    elif not resultados["rutas"]:
+    elif not direcciones:
         resultados["error"] = "Ninguna ruta te permite llegar al destino con el porcentaje actual de batería."
     else:
         resultados["mensaje"] = "Todas las rutas son alcanzables con el porcentaje de batería actual."
 
     return json.dumps(resultados, indent=2)
-
