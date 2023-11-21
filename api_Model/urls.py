@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import ruta_optima_view
+from .views import RutaOptimaView
 
 urlpatterns = [
-    path('ruta_optima/', ruta_optima_view, name='ruta_optima'),
+    path('ruta_optima/', RutaOptimaView.as_view(), name='ruta_optima'),
 ]
