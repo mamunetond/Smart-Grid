@@ -67,4 +67,72 @@ class UserAdmin(models.Model):
     
     def __str__(self):
         return self.identification
+    
+    
+class Trip(models.Model):
+    vehiculo_id = models.CharField(max_length=100)
+    ruta1_id = models.CharField(max_length=100)
+    ruta2_id = models.CharField(max_length=100)
+    ruta3_id = models.CharField(max_length=100)
+    distancia1 = models.IntegerField()
+    distancia2 = models.IntegerField()
+    distancia3 = models.IntegerField()
+    duracion1 = models.IntegerField()
+    duracion2 = models.IntegerField()
+    duracion3 = models.IntegerField()
+    consumo_ajustado1 = models.IntegerField()
+    consumo_ajustado2 = models.IntegerField()
+    consumo_ajustado3 = models.IntegerField()
+    porcentaje_bateria1 = models.IntegerField()
+    porcentaje_bateria2 = models.IntegerField()
+    porcentaje_bateria3 = models.IntegerField()
+    #rutas = models.JSONField()  # Almacena un arreglo de rutas
+    rutas = [
+        (ruta1_id,distancia1,duracion1,consumo_ajustado1,porcentaje_bateria1),
+        (ruta2_id,distancia2,duracion1,consumo_ajustado2,porcentaje_bateria2),
+        (ruta3_id,distancia3,duracion3,consumo_ajustado3,porcentaje_bateria3),
+    ]
+    origen = models.CharField(max_length=200)
+    destino = models.CharField(max_length=200)
+
+    def _str_(self):
+        return f"Viaje desde {self.origen} hasta {self.destino} para el vehículo {self.vehiculo_id}"
+    
+class Statistics_percentage(models.Model):
+    
+    Statistics_id = models.IntegerField()
+    Enero = models.IntegerField()
+    Febrero = models.IntegerField()
+    Marzo = models.IntegerField()
+    Abril = models.IntegerField()
+    Mayo = models.IntegerField()
+    Junio = models.IntegerField()
+    Julio = models.IntegerField()
+    Agosto = models.IntegerField()
+    Septiembre = models.IntegerField()
+    Octubre = models.IntegerField()
+    Noviembre = models.IntegerField()
+    Diciembre = models.IntegerField()
+    porcentaje_consumido = models.IntegerField()
+    carga_restante = models.IntegerField()
+    
+
+class Statistics_consumption(models.Model):
+    
+    Statistics_id = models.IntegerField()
+    Enero = models.IntegerField()
+    Febrero = models.IntegerField()
+    Marzo = models.IntegerField()
+    Abril = models.IntegerField()
+    Mayo = models.IntegerField()
+    Junio = models.IntegerField()
+    Julio = models.IntegerField()
+    Agosto = models.IntegerField()
+    Septiembre = models.IntegerField()
+    Octubre = models.IntegerField()
+    Noviembre = models.IntegerField()
+    Diciembre = models.IntegerField()
+    consumo_total = models.IntegerField()
+    
+
 
