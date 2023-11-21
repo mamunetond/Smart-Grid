@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'api_Route',
     'api_ChargePoint',
     'api_ElectricVehicle',
+    'api_Model',
     'rest_framework',
     'coreapi',
     'corsheaders',

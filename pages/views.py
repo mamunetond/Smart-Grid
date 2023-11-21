@@ -9,6 +9,7 @@ from .models import ChargePoint, ElectricVehicle
 import json
 from rest_framework import generics
 from .serializers import ElectricVehicleSerializer
+from .utils import encontrar_ruta_optima 
 # Create your views here.
 
 class ChargePointView(View):
@@ -65,3 +66,11 @@ class ElectricVehicleListCreate(generics.ListCreateAPIView):
 class ElectricVehicleRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = ElectricVehicle.objects.all()
     serializer_class = ElectricVehicleSerializer
+    
+class ruta_optima():     
+    def get(self, request, *args, **kwargs):         
+        origen = request.GET.get('origen')         
+        destino = request.GET.get('destino')  
+        porcentaje_actual = request.GET.get('porcentaje')              
+        ruta_optima = encontrar_ruta_optima(origen, destino,porcentaje_actual)        
+        return JsonResponse(ruta_optima)

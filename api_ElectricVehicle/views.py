@@ -6,3 +6,5 @@ from .models import ElectricVehicle
 class ElectricVehicleViewSet(viewsets.ModelViewSet):
    queryset = ElectricVehicle.objects.all()
    serializer_class = ElectricVehicleSerializer
+
+
