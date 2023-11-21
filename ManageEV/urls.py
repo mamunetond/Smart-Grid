@@ -29,4 +29,10 @@ urlpatterns = [
     path('docs_ChargePoint/', include_docs_urls(title = 'Api Charge Point Documentation')),
     path('docs_ElectricVehicle/', include_docs_urls(title = 'Api Electric Vehicle Documentation')),
     path('api_Model/', include('api_Model.urls')),
+    path('api_Trip/', include('api_Trip.urls')),
+    path('docs_Trip/', include_docs_urls(title = 'Api Trip Documentation')),
+    path('api_Statistics_percentage/', include('api_Statistics_percentage.urls')),
+    path('docs_Statistics_percentage/', include_docs_urls(title = 'Api Statistics Percentage Documentation')),
+    path('api_Statistics_consumption/', include('api_Statistics_consumption.urls')),
+    path('docs_Statistics_consumption/', include_docs_urls(title = 'Api Statistics Consumption Documentation')),
 ]
