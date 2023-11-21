@@ -1,5 +1,3 @@
-# model_predictivo.py
-
 import os
 import json
 from dotenv import load_dotenv
@@ -45,7 +43,7 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
 
     capacidad_bateria_estandar = 60  # Capacidad estándar de la batería en kWh
 
-    resultados = {"rutas": [], "ruta_optima": None, "error": None, "mensaje": None}
+    resultados = {"rutas": [], "error": None, "mensaje": None, "ruta_optima_index": None}
 
     for i, ruta_info in enumerate(direcciones):
         consumo_ajustado = calcular_consumo_ajustado(ruta_info)
@@ -53,6 +51,10 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
         porcentaje_bateria_necesario = max(0, (consumo_ajustado / capacidad_bateria_estandar) * 100)
 
         mensaje_ruta = "Con el porcentaje de batería actual, puedes llegar al destino." if porcentaje_bateria_necesario <= porcentaje_bateria_actual else f"Necesitas cargar aproximadamente {max(0, porcentaje_bateria_necesario - porcentaje_bateria_actual):.2f}% más de batería para usar esta ruta."
+
+        # Verifica si la ruta actual es la óptima
+        if resultados["ruta_optima_index"] is None or porcentaje_bateria_necesario < resultados["rutas"][resultados["ruta_optima_index"]]["porcentaje_bateria_necesario"]:
+            resultados["ruta_optima_index"] = i
 
         # Ajusta la información de la ruta para incluir solo lo necesario
         informacion_ruta = {
@@ -67,21 +69,17 @@ def encontrar_ruta_optima(origen, destino, porcentaje_bateria_actual):
             "consumo_ajustado": consumo_ajustado,
             "porcentaje_bateria_necesario": porcentaje_bateria_necesario,
             "mensaje": mensaje_ruta,
+            "ruta_optima": False,  # Inicialmente establecer como False
             "informacion_ruta": informacion_ruta  # Incluye la información de la ruta en cada ruta
         }
 
         resultados["rutas"].append(ruta_actual)
 
-    # Encuentra la ruta más eficiente
+    # Establece la ruta óptima
     if resultados["rutas"]:
-        mejor_ruta = min(resultados["rutas"], key=lambda x: x["consumo_ajustado"])
+        resultados["rutas"][resultados["ruta_optima_index"]]["ruta_optima"] = True
 
-        resultados["ruta_optima"] = {
-            "numero_ruta": mejor_ruta["numero_ruta"],
-            "consumo_ajustado": mejor_ruta["consumo_ajustado"],
-            "mensaje_carga": mejor_ruta["mensaje"],
-        }
-    elif not direcciones:
+    if not resultados["rutas"]:
         resultados["error"] = "Ninguna ruta te permite llegar al destino con el porcentaje actual de batería."
     else:
         resultados["mensaje"] = "Todas las rutas son alcanzables con el porcentaje de batería actual."

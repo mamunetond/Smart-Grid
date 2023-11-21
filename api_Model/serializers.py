@@ -9,14 +9,13 @@ class RutaSerializer(serializers.Serializer):
     porcentaje_bateria_necesario = serializers.FloatField()
     mensaje = serializers.CharField()
     informacion_ruta = serializers.JSONField()
+    ruta_optima = serializers.BooleanField()
 
 class RutasOptimasSerializer(serializers.Serializer):
     rutas = RutaSerializer(many=True)
-    ruta_optima = serializers.JSONField()
 
-    def get_ruta_optima(self, obj):
-        ruta_optima = obj.get('ruta_optima', None)
-        if ruta_optima:
-            # Incluye la información de la ruta en la ruta óptima
-            ruta_optima["informacion_ruta"] = obj.get('informacion_ruta', {})
-        return ruta_optima
+    def to_representation(self, instance):
+        # Custom representation to remove the 'ruta_optima' field if it is None
+        data = super().to_representation(instance)
+        data.pop("ruta_optima", None)
+        return data
