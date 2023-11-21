@@ -1,10 +1,10 @@
 from django.urls import path, include
 from rest_framework import routers
-from api_ElectricVehicle import views
+from .views import ElectricVehicleViewSet
 
-router=routers.DefaultRouter()
-router.register(r'routes', views.ElectricVehicleViewSet)
+router = routers.DefaultRouter()
+router.register(r'routes', ElectricVehicleViewSet)
 
 urlpatterns = [
-    path('',include(router.urls)),
+    path('', include(router.urls)),
 ]

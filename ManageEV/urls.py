@@ -27,6 +27,7 @@ urlpatterns = [
     path('docs_UserAdmin/', include_docs_urls(title = 'Api User Admin Documentation')),
     path('docs_Route/', include_docs_urls(title = 'Api Route Documentation')),
     path('docs_ChargePoint/', include_docs_urls(title = 'Api Charge Point Documentation')),
+    
     path('docs_ElectricVehicle/', include_docs_urls(title = 'Api Electric Vehicle Documentation')),
     path('api_Model/', include('api_Model.urls')),
     path('api_Trip/', include('api_Trip.urls')),
